@@ -42,6 +42,70 @@ After running the program for a while, save the screenshot image overwriting `ta
 
 ![problem2](problem2.png)
 
+For the conservation of movement energy, we have:
+$$
+m_1v_1^2 + m_2v_2^2  = m_1v_1'^2 +  m_2v_2'^2 
+$$
+
+and it can be written into
+
+$$
+m_1(v_1+v_1')(v_1-v_1') = m_2(v_2+v_2')(v_2'-v_2)
+$$
+
+From the conservation of momentum, we have:
+
+$$
+m_1v_1 + m_2v_2  = m_1v_1' +  m_2v_2' 
+$$
+
+So, we can derive
+
+$$
+v_1+v_1' = v_2+v_2'
+$$
+
+Now let's write the impulse $I$:
+
+$$
+I = m_1(v_1'-v_1)
+$$
+
+and also notice that the impulse has a opposite direction for object $m_2$.
+
+$$
+-I = m_2(v_2'-v_2)
+$$
+
+Since $v_1'$ and $v_2'$ are unknown, and $v_1$ and $v_2$ are known, we can use $I, v_1, v_2$ to represent $v_1'$ and $v_2'$:
+
+
+$$
+v_1' = v_1 + I/m_1
+$$
+
+$$
+v_2' = v_2 - I/m_2
+$$
+
+Plug those two values into $v_1+v_1' = v_2+v_2'$, we have
+
+$$
+I/m_1 + I/m_2 = 2(v_2-v_1)
+$$
+
+hence
+
+$$
+I = {2m_1m_2\over m_1+m_2} (v_2-v_1)
+$$
+
+For there is no friction in the tangent plane, only velocity in the normal direction could have force effect.
+
+$$
+I_{\text{norm}} = I \cdot n \cdot |n|
+$$
+where $n$ is the normal vector of the tangent plane.
 
 ## After Doing the Assignment
 
