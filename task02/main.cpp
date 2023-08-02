@@ -11,17 +11,17 @@
 #include <GLFW/glfw3.h>
 #include <Eigen/Dense>
 
-#include "../src/pba_util_glfw.h"
 #include "../src/pba_util_gl.h"
+#include "../src/pba_util_glfw.h"
 
 /**
  * particle class (radius = 0)
  */
 class Particle {
  public:
-  Eigen::Vector2f pos; //! position
-  Eigen::Vector2f velo; //! velocity
-  Eigen::Vector3f color; //! color
+  Eigen::Vector2f pos;    //! position
+  Eigen::Vector2f velo;   //! velocity
+  Eigen::Vector3f color;  //! color
 };
 
 /**
@@ -33,14 +33,15 @@ class Particle {
  * @param [in] ball_mass ball mass
  * @param [in] ball_rad ball rad
  */
-void collide_particle_ball(
-    Particle &p,
-    float particle_mass,
-    Eigen::Vector2f &ball_pos,
-    Eigen::Vector2f &ball_velo,
-    float ball_mass,
-    float ball_rad) {
-  if ((p.pos - ball_pos).norm() > ball_rad) { return; }
+void collide_particle_ball(Particle& p,
+                           float particle_mass,
+                           Eigen::Vector2f& ball_pos,
+                           Eigen::Vector2f& ball_velo,
+                           float ball_mass,
+                           float ball_rad) {
+  if ((p.pos - ball_pos).norm() > ball_rad) {
+    return;
+  }
   const Eigen::Vector2f plane_norm = (p.pos - ball_pos).normalized();
   const Eigen::Vector2f plane_org = ball_pos + plane_norm * ball_rad;
   float height = (p.pos - plane_org).dot(plane_norm);
@@ -60,7 +61,9 @@ void collide_particle_ball(
 
   // write a few lines of code to compute the velocity of ball and particle
   // please uncomment the lines below
-  const Eigen::Vector2f impulse = particle_mass* 2.f * (p.velo - ball_velo).dot(plane_norm) * plane_norm;
+  const Eigen::Vector2f impulse = particle_mass * ball_mass * 2.f *
+                                  (p.velo - ball_velo).dot(plane_norm) *
+                                  plane_norm / (particle_mass + ball_mass);
   p.velo += -impulse / particle_mass;
   ball_velo += impulse / ball_mass;
 }
@@ -73,21 +76,23 @@ void collide_particle_ball(
  * @param [in] plane_org  plane origin
  * @param [in] plane_nrm  plane normal
  */
-void collision_circle_plane(
-    Eigen::Vector2f &pos,
-    Eigen::Vector2f &velo,
-    const float rad,
-    const Eigen::Vector2f &plane_org,
-    const Eigen::Vector2f &plane_nrm) {
+void collision_circle_plane(Eigen::Vector2f& pos,
+                            Eigen::Vector2f& velo,
+                            const float rad,
+                            const Eigen::Vector2f& plane_org,
+                            const Eigen::Vector2f& plane_nrm) {
   const float height = (pos - plane_org).dot(plane_nrm) - rad;
-  if (height > 0.f) { return; }
+  if (height > 0.f) {
+    return;
+  }
   pos -= height * 2 * plane_nrm;
   const float velo_perp = velo.dot(plane_nrm);
   velo -= 2.f * velo_perp * plane_nrm;
 }
 
 int main() {
-  GLFWwindow *window = pba::window_initialization("task02: Linear Momentum Conservation");
+  GLFWwindow* window =
+      pba::window_initialization("task02: Linear Momentum Conservation");
 
   const float box_size = 1.5;
 
@@ -100,13 +105,15 @@ int main() {
 
   // particle information
   std::vector<Particle> particles(100);
-  for (auto &p: particles) {
+  for (auto& p : particles) {
     // initialization
     // particle should be put outside the ball at the beginning
     for (unsigned int itr = 0; itr < 100; ++itr) {
       p.pos.setRandom();
       p.pos *= box_size * 0.5f;
-      if (p.pos.norm() > ball_rad) { break; }
+      if (p.pos.norm() > ball_rad) {
+        break;
+      }
     }
     // velocity is random but its magnitude is 1
     p.velo.setRandom();
@@ -123,21 +130,32 @@ int main() {
     pba::default_window_2d(window);
 
     if (trajectory.size() < 3000) {
-      ball_pos += ball_velo * dt; // step time for ball
+      ball_pos += ball_velo * dt;  // step time for ball
       // collision between ball and the walls
-      collision_circle_plane(ball_pos, ball_velo, ball_rad, {-box_size * 0.5f, 0.f}, {+1.f, 0.f}); // left wall
-      collision_circle_plane(ball_pos, ball_velo, ball_rad, {0.f, -box_size * 0.5f}, {0.f, 1.f});  // bottom wall
-      collision_circle_plane(ball_pos, ball_velo, ball_rad, {+box_size * 0.5f, 0.f}, {-1.f, 0.f}); // right wall
-      collision_circle_plane(ball_pos, ball_velo, ball_rad, {0.f, +box_size * 0.5f}, {0.f, -1.f}); // top wall
-      for (auto &p: particles) {
-        p.pos += p.velo * dt; // step time for a particle
+      collision_circle_plane(ball_pos, ball_velo, ball_rad,
+                             {-box_size * 0.5f, 0.f},
+                             {+1.f, 0.f});  // left wall
+      collision_circle_plane(ball_pos, ball_velo, ball_rad,
+                             {0.f, -box_size * 0.5f},
+                             {0.f, 1.f});  // bottom wall
+      collision_circle_plane(ball_pos, ball_velo, ball_rad,
+                             {+box_size * 0.5f, 0.f},
+                             {-1.f, 0.f});  // right wall
+      collision_circle_plane(ball_pos, ball_velo, ball_rad,
+                             {0.f, +box_size * 0.5f}, {0.f, -1.f});  // top wall
+      for (auto& p : particles) {
+        p.pos += p.velo * dt;  // step time for a particle
         // collision between a particle and the walls
-        collision_circle_plane(p.pos, p.velo, 0.f, {-box_size * 0.5f, 0.f}, {+1.f, 0.f}); // left wall
-        collision_circle_plane(p.pos, p.velo, 0.f, {0.f, -box_size * 0.5f}, {0.f, 1.f});  // bottom wall
-        collision_circle_plane(p.pos, p.velo, 0.f, {+box_size * 0.5f, 0.f}, {-1.f, 0.f}); // right wall
-        collision_circle_plane(p.pos, p.velo, 0.f, {0.f, +box_size * 0.5f}, {0.f, -1.f}); // top wall
-        collide_particle_ball(p, particle_mass,
-                              ball_pos, ball_velo, ball_mass, ball_rad);
+        collision_circle_plane(p.pos, p.velo, 0.f, {-box_size * 0.5f, 0.f},
+                               {+1.f, 0.f});  // left wall
+        collision_circle_plane(p.pos, p.velo, 0.f, {0.f, -box_size * 0.5f},
+                               {0.f, 1.f});  // bottom wall
+        collision_circle_plane(p.pos, p.velo, 0.f, {+box_size * 0.5f, 0.f},
+                               {-1.f, 0.f});  // right wall
+        collision_circle_plane(p.pos, p.velo, 0.f, {0.f, +box_size * 0.5f},
+                               {0.f, -1.f});  // top wall
+        collide_particle_ball(p, particle_mass, ball_pos, ball_velo, ball_mass,
+                              ball_rad);
       }
       trajectory.push_back(ball_pos);
     }
@@ -156,7 +174,7 @@ int main() {
 
     ::glPointSize(5);
     ::glBegin(GL_POINTS);
-    for (const auto &p: particles) {
+    for (const auto& p : particles) {
       ::glColor3f(p.color.x(), p.color.y(), p.color.z());
       ::glVertex2f(p.pos.x(), p.pos.y());
     }
