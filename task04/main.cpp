@@ -118,7 +118,11 @@ void nearest_kdtree(
   // Use the "signed_distance_aabb" function above.
 
   const Eigen::Vector2f pos = nodes[idx_node].pos;
-  if ((pos - pos_in).norm() < (pos_near - pos_in).norm()) { pos_near = pos; } // update the nearest position
+  auto best_distance = (pos_near - pos_in).norm();
+  if (signed_distance_aabb(pos_in, x_min, x_max, y_min, y_max) > best_distance) {
+      return;
+  }
+  if ((pos - pos_in).norm() < best_distance) { pos_near = pos; } // update the nearest position
 
   if (i_depth % 2 == 0) { // division in x direction
     nearest_kdtree(pos_near, pos_in, nodes, nodes[idx_node].idx_node_left, x_min, pos.x(), y_min, y_max, i_depth + 1);
