@@ -32,7 +32,6 @@
 *.app
 
 .vs
-.vscode
 
 *.vcxproj
 *.pdb
