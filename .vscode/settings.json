@@ -26,5 +26,6 @@
     "string": "cpp",
     "string_view": "cpp",
     "bitset": "cpp"
-  }
+  },
+  "editor.formatOnSaveMode": "modifications"
 }
