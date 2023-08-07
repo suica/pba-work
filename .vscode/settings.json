@@ -1,5 +1,4 @@
 {
-  "cmake.generator": "Unix Makefiles",
   "files.associations": {
     "*.mdx": "markdown",
     "dense": "cpp",
