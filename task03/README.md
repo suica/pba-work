@@ -53,11 +53,11 @@ Run the program with different numbers of the particles (5k, 10k, and 20k).
 The number of the particle can be set at `line #189`  in [main.cpp](main.cpp).
 Record the computation time by filling the table below.     
 
-| #particle | time |
-| --- | --- |
-| 5000 | ? |
-| 10000 | ? |
-| 20000 | ? |
+| #particle | time    |
+| --------- | ------- |
+| 5000      | 17365ms |
+| 10000     | 69164ms |
+| 20000     | 279998ms|
 
 
 Take a screenshot image (it should look like image at the top) after 200 steps for the 20k particles. 
