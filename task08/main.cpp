@@ -85,9 +85,9 @@ void wdw_volume_tri_origin(
   w = 1./6.*node2xyz[0].dot(node2xyz[1].cross(node2xyz[2]));
   // ------------------------------
   // Write some code below to compute differentiation. Keep it simple and understandable
-  // dw[0] =
-  // dw[1] =
-  // dw[2] =
+  dw[0] = 1. / 6 * node2xyz[1].cross(node2xyz[2]);
+  dw[1] = 1. / 6 * node2xyz[2].cross(node2xyz[0]);
+  dw[2] = 1. / 6 * node2xyz[0].cross(node2xyz[1]);
 }
 
 void inflate(
