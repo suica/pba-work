@@ -24,8 +24,16 @@ void solve_laplace_gauss_seidel_on_grid(
     for (unsigned int iy = 0; iy < grid_size; ++iy) {
       unsigned int idx_center = iy * grid_size + ix;
       if (vtx2isfix[idx_center]) { continue; }
-      // write some code below to implement Gauss-Seidel method
-      // Do not write more than 5 lines of code
+      float valence = 0;
+      vtx2val[idx_center] =
+          iy + 1 < grid_size ? (valence++, vtx2val[idx_center + grid_size]) : 0;
+      vtx2val[idx_center] +=
+          ix + 1 < grid_size ? (valence++, vtx2val[idx_center + 1]) : 0;
+      vtx2val[idx_center] +=
+          iy - 1 >= 0 ? (valence++, vtx2val[idx_center - grid_size]) : 0;
+      vtx2val[idx_center] +=
+          ix - 1 >= 0 ? (valence++, vtx2val[idx_center - 1]) : 0;
+      vtx2val[idx_center] /= valence;
     }
   }
 }
